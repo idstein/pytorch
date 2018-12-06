@@ -28,7 +28,7 @@ struct DepthwiseArgs {
   int out_cols{0};
 };
 
-#ifdef defined(__ARM_NEON__) || defined(__ARM_NEON)
+#if defined(__ARM_NEON__) || defined(__ARM_NEON)
 
 static inline void winograd_f2k3_input_transform_inplace__neon(
     float32x4_t* d0,
