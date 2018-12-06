@@ -143,8 +143,8 @@ class OpenGLTensorToTextureStylizerPreprocessOp : public Operator<CPUContext>,
       : Operator<CPUContext>(operator_def, ws) {}
 
   bool RunOnDevice() {
-    const auto& input = Input(0);
-    const auto& mean = Input(1);
+    const Tensor& input = Input<Tensor>(0, CPU);
+    const Tensor& mean = Input<Tensor>(1, CPU);
 
     CAFFE_ENFORCE(input.ndim() == 4);
 
@@ -218,7 +218,7 @@ class OpenGLTextureToTextureStylizerPreprocessOp : public Operator<CPUContext>,
 
   bool RunOnDevice() {
     const GLImageVector<uint8_t>& input = Inputs()[0]->template Get<GLImageVector<uint8_t>>();
-    const auto& mean = Input(1);
+    const Tensor& mean = Input<Tensor>(1, CPU);
 
     const int num_images = input.size();
     const int input_height = input.height();
@@ -275,7 +275,7 @@ class OpenGLTextureToTensorStylizerDeprocessOp : public Operator<CPUContext>,
 
   bool RunOnDevice() {
     const GLImageVector<float16_t>& input = Inputs()[0]->template Get<GLImageVector<float16_t>>();
-    const auto& mean = Input(1);
+    const Tensor& mean = Input(1, CPU);
     auto* output = Output(0);
 
     const int num_images = input.size(), channels = input.channels(), height = input.height(),
@@ -345,7 +345,7 @@ class OpenGLTextureToTextureStylizerDeprocessOp : public Operator<CPUContext>,
 
   bool RunOnDevice() {
     const GLImageVector<float16_t>& input = Inputs()[0]->template Get<GLImageVector<float16_t>>();
-    const auto& mean = Input(1);
+    const Tensor& mean = Input(1, CPU);
 
     const int num_images = input.size(), channels = input.channels(), height = input.height(),
               width = input.width();

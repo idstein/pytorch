@@ -6,10 +6,9 @@
 #include "caffe2/core/logging.h"
 #include "caffe2/core/timer.h"
 
-#if CAFFE2_ANDROID && defined(__ARM_NEON__)
+#if CAFFE2_ANDROID && (defined(__ARM_NEON__) || defined(__ARM_NEON)) && defined(CAFFE2_MOBILE_OPENGL_NEON_EXPERIMENTAL_COPY)
 
 #include "../android/AndroidGLContext.h"
-
 // https://community.arm.com/thread/10002
 void arm_memcpy(volatile unsigned char* dst, volatile unsigned char* src, int sz) {
   if (sz & 63) {

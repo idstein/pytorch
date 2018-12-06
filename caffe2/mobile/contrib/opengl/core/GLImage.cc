@@ -8,7 +8,7 @@ CAFFE_KNOWN_TYPE(GLImage<float>);
 CAFFE_KNOWN_TYPE(GLImage<uint8_t>);
 CAFFE_KNOWN_TYPE(GLImageVector<float>);
 CAFFE_KNOWN_TYPE(GLImageVector<uint8_t>);
-#ifdef __ARM_NEON__
+#if defined(__ARM_NEON__) || defined(__ARM_NEON)
 CAFFE_KNOWN_TYPE(GLImage<float16_t>);
 CAFFE_KNOWN_TYPE(GLImageVector<float16_t>);
 #endif

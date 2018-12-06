@@ -371,15 +371,15 @@ class OpenGLInstanceNormPReluOp final : public Operator<CPUContext>, ImageAlloca
     int prelu_size = 0;
     if (FUSE_PRELU) {
       DCHECK_EQ(InputSize(), 4);
-      const auto& prelu_scale = Input(PRELU);
+      const Tensor& prelu_scale = Input(PRELU);
       prelu_data = prelu_scale.template data<float>();
       prelu_size = prelu_scale.size();
     } else {
       DCHECK_EQ(InputSize(), 3);
     }
 
-    const auto& scale = Input(SCALE);
-    const auto& bias = Input(BIAS);
+    const Tensor& scale = Input(SCALE);
+    const Tensor& bias = Input(BIAS);
 
     if (!f_reduce) {
       f_reduce.reset(new GLReduce());

@@ -260,7 +260,7 @@ namespace caffe2 {
 
 template <typename OPBase>
 static void computeOutputHW(OPBase* op, int H, int W, int* OH, int* OW) {
-  Tensor<CPUContext> input, output;
+  Tensor input(CPU), output(CPU);
   input.Resize(1, 1, H, W);
   op->SetOutputSize(input, &output, 1);
   CAFFE_ENFORCE_EQ(output.ndim(), 4);

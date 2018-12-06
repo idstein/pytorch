@@ -1,4 +1,4 @@
-#ifdef __ARM_NEON__
+#if defined(__ARM_NEON__) || defined(__ARM_NEON)
 #include "caffe2/core/init.h"
 #include "caffe2/core/operator.h"
 #include "caffe2/core/tensor.h"

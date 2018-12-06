@@ -65,7 +65,7 @@ CMAKE_ARGS+=("-DBUILD_TEST=OFF")
 CMAKE_ARGS+=("-DBUILD_BINARY=OFF")
 CMAKE_ARGS+=("-DBUILD_PYTHON=OFF")
 CMAKE_ARGS+=("-DBUILD_SHARED_LIBS=OFF")
-CMAKE_ARGS+=("-DANDROID_TOOLCHAIN=gcc")
+CMAKE_ARGS+=("-DANDROID_TOOLCHAIN=clang")
 # Disable unused dependencies
 CMAKE_ARGS+=("-DUSE_CUDA=OFF")
 CMAKE_ARGS+=("-DUSE_GFLAGS=OFF")
@@ -82,12 +82,14 @@ fi
 
 # Android specific flags
 CMAKE_ARGS+=("-DANDROID_NDK=$ANDROID_NDK")
-CMAKE_ARGS+=("-DANDROID_ABI=armeabi-v7a with NEON")
+CMAKE_ARGS+=("-DANDROID_ABI=armeabi-v7a")
 CMAKE_ARGS+=("-DANDROID_NATIVE_API_LEVEL=21")
 CMAKE_ARGS+=("-DANDROID_CPP_FEATURES=rtti exceptions")
-# TODO: As the toolchain file doesn't support NEON-FP16 extension,
 # we disable USE_MOBILE_OPENGL for now, it will be re-enabled in the future.
-CMAKE_ARGS+=("-DUSE_MOBILE_OPENGL=OFF")
+CMAKE_ARGS+=("-DANDROID_COMPILER_FLAGS=-mfpu=neon-fp16")
+CMAKE_ARGS+=("-DUSE_MOBILE_OPENGL=ON")
+CMAKE_ARGS+=("-DUSE_NNAPI=OFF")
+
 
 # Use-specified CMake arguments go last to allow overridding defaults
 CMAKE_ARGS+=($@)

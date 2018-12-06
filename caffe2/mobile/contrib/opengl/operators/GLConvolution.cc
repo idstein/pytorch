@@ -657,7 +657,7 @@ namespace caffe2 {
 
 template <typename OPBase>
 static void computeOutputHW(OPBase* op, int H, int W, int* OH, int* OW) {
-  Tensor<CPUContext> input, output;
+  TensorCPU input(CPU), output(CPU);
   input.Resize(1, 1, H, W);
   op->SetOutputSize(input, &output, 1);
   CAFFE_ENFORCE_EQ(output.ndim(), 4);
@@ -732,8 +732,8 @@ class OpenGLConvOp final : public ConvPoolOpBase<CPUContext>, ImageAllocator<T> 
 
   bool RunOnDeviceWithOrderNCHW() override {
     const GLImageVector<T>& input = Inputs()[INPUT]->template Get<GLImageVector<T>>();
-    auto& filter = Input(FILTER);
-    auto& bias = Input(BIAS);
+    const Tensor& filter = Input<Tensor>(FILTER, CPU);
+    const Tensor& bias = Input<Tensor>(BIAS, CPU);
 
     const int num_images = input.size();
     const int input_channels = input.channels();
@@ -760,7 +760,7 @@ class OpenGLConvOp final : public ConvPoolOpBase<CPUContext>, ImageAllocator<T> 
     const float* prelu_scale = nullptr;
     int prelu_scale_size = 0;
     if (fusePRelu) {
-      auto& prelu = Input(PRELU);
+      const Tensor& prelu = Input<Tensor>(PRELU, CPU);
       prelu_scale = prelu.template data<float>();
       prelu_scale_size = prelu.size();
     } else if (fuseRelu) {
@@ -905,8 +905,8 @@ class OpenGLConvTransposeOp final : public ConvTransposeUnpoolBase<CPUContext>, 
 
   bool RunOnDeviceWithOrderNCHW() override {
     const GLImageVector<T>& input = Inputs()[INPUT]->template Get<GLImageVector<T>>();
-    auto& filter = Input(FILTER);
-    auto& bias = Input(BIAS);
+    const Tensor& filter = Input<Tensor>(FILTER, CPU);
+    const Tensor& bias = Input<Tensor>(BIAS, CPU);
 
     const int num_images = input.size();
     const int input_channels = input.channels();
@@ -934,7 +934,7 @@ class OpenGLConvTransposeOp final : public ConvTransposeUnpoolBase<CPUContext>, 
     const float* prelu_scale = nullptr;
     int prelu_scale_size = 0;
     if (fusePRelu) {
-      auto& prelu = Input(PRELU);
+      const Tensor& prelu = Input<Tensor>(PRELU, CPU);
       prelu_scale = prelu.template data<float>();
       prelu_scale_size = prelu.size();
     } else if (fuseRelu) {

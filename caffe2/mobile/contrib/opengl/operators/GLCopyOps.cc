@@ -20,7 +20,7 @@ class CopyToOpenGLOp final : public Operator<CPUContext>, ImageAllocator<T> {
 
   bool RunOnDevice() override {
     // caffe2::Timer timer;
-    const TensorCPU& X = Input(0);
+    const Tensor& X = Input(0);
     const int num_images = X.dim32(0);
     const int input_channels = X.dim32(1);
     const int input_width = X.dim32(3);
@@ -126,22 +126,22 @@ class CopyFromOpenGLOp final : public Operator<CPUContext> {
                               size_t stride,
                               size_t channels,
                               const GLTexture::Type& type) {
-          //#if CAFFE2_ANDROID && defined(__ARM_NEON__)
-          //        if (static_cast<AndroidGLContext*>(GLContext::getGLContext())->get_platform() ==
-          //        Mali) {
-          //          caffe2::Timer timer;
-          //          timer.Start();
-          //          float16_t* copy_buffer = (float16_t*)malloc(_capacity);
-          //          arm_memcpy(
-          //              (volatile unsigned char*)copy_buffer, (volatile unsigned char*)buffer,
-          //              _capacity);
-          //          deInterleaveSlice(
-          //              output + 4 * slice * output_size, copy_buffer, width, height, stride,
-          //              slice_channels);
-          //          free(copy_buffer);
-          //          LOG(INFO) << "memcpy takes " << timer.MilliSeconds() << " ms";
-          //        } else
-          //#endif
+          #if CAFFE2_ANDROID && (defined(__ARM_NEON__) || defined(__ARM_NEON)) && defined(CAFFE2_MOBILE_OPENGL_NEON_EXPERIMENTAL_COPY)
+                  if (static_cast<AndroidGLContext*>(GLContext::getGLContext())->get_platform() ==
+                  Mali) {
+                    caffe2::Timer timer;
+                    timer.Start();
+                    float16_t* copy_buffer = (float16_t*)malloc(_capacity);
+                    arm_memcpy(
+                        (volatile unsigned char*)copy_buffer, (volatile unsigned char*)buffer,
+                        _capacity);
+                    deInterleaveSlice(
+                        output + 4 * slice * output_size, copy_buffer, width, height, stride,
+                        slice_channels);
+                    free(copy_buffer);
+                    LOG(INFO) << "memcpy takes " << timer.MilliSeconds() << " ms";
+                  } else
+          #endif
           {
             gl_log(GL_VERBOSE,
                    "calling deInterleaveSlice width: %d, height: %d, stride: %d, channels: %d\n",

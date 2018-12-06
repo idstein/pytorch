@@ -115,8 +115,8 @@ class GLNormPlanarYUVOp final : public Operator<CPUContext>, ImageAllocator<T> {
     GLImageVector<T>* output = ImageAllocator<T>::newImage(
         num_images, output_width, output_height, output_channels, is_last);
 
-    const auto& M = Input(1); // mean
-    const auto& S = Input(2); // standard deviation
+    const Tensor& M = Input(1); // mean
+    const Tensor& S = Input(2); // standard deviation
     CAFFE_ENFORCE(input_channels == M.dim(1));
     CAFFE_ENFORCE(input_channels == S.dim(1));
 

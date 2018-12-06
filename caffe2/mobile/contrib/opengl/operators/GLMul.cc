@@ -88,7 +88,7 @@ class OpenGLMulOp final : public Operator<CPUContext>, ImageAllocator<T> {
 
   bool RunOnDevice() override {
     const GLImageVector<T>& input = Inputs()[0]->template Get<GLImageVector<T>>();
-    const auto& B = Input(1);
+    const Tensor& B = Input(1);
     CAFFE_ENFORCE_EQ(B.size(), 1); // only scalar is supported
 
     const int num_images = input.size();

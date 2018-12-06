@@ -3,7 +3,7 @@
 
 #include "caffe2/core/common.h"
 
-#ifdef __ARM_NEON__
+#if (defined(__ARM_NEON__) || defined(__ARM_NEON))
 #if CAFFE2_IOS
 #include "arm_neon.h"
 #elif CAFFE2_ANDROID
