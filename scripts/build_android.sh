@@ -74,6 +74,7 @@ CMAKE_ARGS+=("-DUSE_LMDB=OFF")
 CMAKE_ARGS+=("-DUSE_LEVELDB=OFF")
 CMAKE_ARGS+=("-DUSE_MPI=OFF")
 CMAKE_ARGS+=("-DUSE_OPENMP=OFF")
+CMAKE_ARGS+=("-DUSE_AVX=OFF")
 
 # Only toggle if VERBOSE=1
 if [ "${VERBOSE:-}" == '1' ]; then
@@ -86,7 +87,6 @@ CMAKE_ARGS+=("-DANDROID_ABI=armeabi-v7a")
 CMAKE_ARGS+=("-DANDROID_NATIVE_API_LEVEL=21")
 CMAKE_ARGS+=("-DANDROID_CPP_FEATURES=rtti exceptions")
 # we disable USE_MOBILE_OPENGL for now, it will be re-enabled in the future.
-CMAKE_ARGS+=("-DANDROID_COMPILER_FLAGS=-mfpu=neon-fp16")
 CMAKE_ARGS+=("-DUSE_MOBILE_OPENGL=ON")
 CMAKE_ARGS+=("-DUSE_NNAPI=OFF")
 

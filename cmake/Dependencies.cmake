@@ -1185,6 +1185,7 @@ if (NOT BUILD_ATEN_MOBILE)
     add_compile_options(-DUSE_GCC_GET_CPUID)
   ENDIF()
 
+  if (USE_AVX)
   FIND_PACKAGE(AVX) # checks AVX and AVX2
 
   # we don't set -mavx and -mavx2 flags globally, but only for specific files
@@ -1198,6 +1199,7 @@ if (NOT BUILD_ATEN_MOBILE)
     MESSAGE(STATUS "AVX2 compiler support found")
     add_compile_options(-DUSE_AVX2)
   ENDIF()
+  endif()
 
   CHECK_C_SOURCE_RUNS("
   #include <stdatomic.h>
