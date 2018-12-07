@@ -37,9 +37,11 @@ echo "Bash: $(/bin/bash --version | head -1)"
 echo "Caffe2 path: $CAFFE2_ROOT"
 echo "Using Android NDK at $ANDROID_NDK"
 
-# Build protobuf from third_party so we have a host protoc binary.
-echo "Building protoc"
-$CAFFE2_ROOT/scripts/build_host_protoc.sh
+echo "Checking host protoc"
+if [ ! -d "$CAFFE2_ROOT/build_host_protoc" ]; then
+  echo "Host protobuf compiler not found; did you run ./scripts/build_host_protoc.sh?"
+  exit 1
+fi
 
 # Now, actually build the Android target.
 BUILD_ROOT=${BUILD_ROOT:-"$CAFFE2_ROOT/build_android"}
