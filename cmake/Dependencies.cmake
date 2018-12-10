@@ -900,21 +900,22 @@ if (USE_ACL)
   include_directories(SYSTEM ${ARM_COMPUTE_INCLUDE_DIRS})
   string (REPLACE ";" " -I" ANDROID_STL_INCLUDE_FLAGS "-I${ANDROID_STL_INCLUDE_DIRS}")
   set (ARM_COMPUTE_SRC_DIR "${CMAKE_CURRENT_LIST_DIR}/../third_party/ComputeLibrary/")
-  set (ARM_COMPUTE_LIB "${CMAKE_CURRENT_BINARY_DIR}/libarm_compute.a")
-  set (ARM_COMPUTE_CORE_LIB "${CMAKE_CURRENT_BINARY_DIR}/libarm_compute_core.a")
+  set (ARM_COMPUTE_LIB "${CMAKE_CURRENT_BINARY_DIR}/lib/libarm_compute.a")
+  set (ARM_COMPUTE_CORE_LIB "${CMAKE_CURRENT_BINARY_DIR}/lib/libarm_compute_core.a")
   set (ARM_COMPUTE_LIBS ${ARM_COMPUTE_LIB} ${ARM_COMPUTE_CORE_LIB})
 
   add_custom_command(
       OUTPUT ${ARM_COMPUTE_LIBS}
       COMMAND
-        /bin/sh -c "export PATH=\"$PATH:$(dirname ${CMAKE_CXX_COMPILER})\" && \
+        /bin/sh -c "${ANDROID_NDK}/build/tools/make_standalone_toolchain.py --arch ${ANDROID_ARCH_NAME} --api ${ANDROID_NATIVE_API_LEVEL} --install-dir /tmp/armcl-toolchain --force && \
+        export PATH=\"/tmp/armcl-toolchain/bin:\$PATH:$(dirname ${CMAKE_CXX_COMPILER})\" && \
         scons -C \"${ARM_COMPUTE_SRC_DIR}\" -Q \
           examples=no validation_tests=no benchmark_tests=no standalone=yes \
           embed_kernels=yes opencl=no gles_compute=yes \
           os=android arch=${ACL_ARCH} \
           extra_cxx_flags=\"${ANDROID_CXX_FLAGS} ${ANDROID_STL_INCLUDE_FLAGS}\"" &&
-        /bin/sh -c "cp ${ARM_COMPUTE_SRC_DIR}/build/libarm_compute-static.a ${CMAKE_CURRENT_BINARY_DIR}/libarm_compute.a" &&
-        /bin/sh -c "cp ${ARM_COMPUTE_SRC_DIR}/build/libarm_compute_core-static.a ${CMAKE_CURRENT_BINARY_DIR}/libarm_compute_core.a" &&
+        /bin/sh -c "cp ${ARM_COMPUTE_SRC_DIR}/build/libarm_compute-static.a ${CMAKE_CURRENT_BINARY_DIR}/lib/libarm_compute.a" &&
+        /bin/sh -c "cp ${ARM_COMPUTE_SRC_DIR}/build/libarm_compute_core-static.a ${CMAKE_CURRENT_BINARY_DIR}/lib/libarm_compute_core.a" &&
         /bin/sh -c "rm -r ${ARM_COMPUTE_SRC_DIR}/build"
       COMMENT "Building ARM compute library" VERBATIM)
   add_custom_target(arm_compute_build ALL DEPENDS ${ARM_COMPUTE_LIBS})
