@@ -38,8 +38,11 @@ echo "Caffe2 path: $CAFFE2_ROOT"
 echo "Using Android NDK at $ANDROID_NDK"
 
 # Build protobuf from third_party so we have a host protoc binary.
-echo "Building protoc"
-$CAFFE2_ROOT/scripts/build_host_protoc.sh
+echo "Checking host protoc"
+if [ ! -f "$CAFFE2_ROOT/build_host_protoc/bin/protoc" ]; then
+  echo "Host protobuf compiler not found; did you run ./scripts/build_host_protoc.sh?"
+  exit 1
+fi
 
 # Now, actually build the Android target.
 BUILD_ROOT=${BUILD_ROOT:-"$CAFFE2_ROOT/build_android"}
@@ -62,7 +65,7 @@ CMAKE_ARGS+=("-DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.
 
 # Don't build artifacts we don't need
 CMAKE_ARGS+=("-DBUILD_TEST=OFF")
-CMAKE_ARGS+=("-DBUILD_BINARY=ON")
+CMAKE_ARGS+=("-DBUILD_BINARY=OFF")
 CMAKE_ARGS+=("-DBUILD_PYTHON=OFF")
 CMAKE_ARGS+=("-DBUILD_SHARED_LIBS=OFF")
 CMAKE_ARGS+=("-DANDROID_TOOLCHAIN=clang")
@@ -87,7 +90,7 @@ CMAKE_ARGS+=("-DANDROID_NATIVE_API_LEVEL=21")
 CMAKE_ARGS+=("-DANDROID_CPP_FEATURES=rtti exceptions")
 # TODO: As the toolchain file doesn't support NEON-FP16 extension,
 # we disable USE_MOBILE_OPENGL for now, it will be re-enabled in the future.
-CMAKE_ARGS+=("-DUSE_MOBILE_OPENGL=OFF")
+CMAKE_ARGS+=("-DUSE_MOBILE_OPENGL=ON")
 
 # Use-specified CMake arguments go last to allow overridding defaults
 CMAKE_ARGS+=($@)
