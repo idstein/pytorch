@@ -3,7 +3,7 @@
 #include "caffe2/operators/conv_op.h"
 #include "caffe2/operators/conv_pool_op_base.h"
 
-#ifdef __ARM_NEON__
+#if (defined(__ARM_NEON__) || defined(__ARM_NEON))
 #include <arm_neon.h>
 #endif
 
@@ -26,7 +26,7 @@ struct DepthwiseArgs {
   int out_cols{0};
 };
 
-#ifdef __ARM_NEON__
+#if (defined(__ARM_NEON__) || defined(__ARM_NEON))
 
 static inline void winograd_f2k3_input_transform_inplace__neon(
     float32x4_t* d0,
